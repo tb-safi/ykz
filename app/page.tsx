@@ -40,6 +40,10 @@ export default function Home() {
             Browse All Words
           </Link>
         </div>
+
+        <p className="text-lg text-muted-foreground">
+          Let&apos;s start learning Finnish vocabulary!
+        </p>
       </div>
     </main>
   );

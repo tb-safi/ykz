@@ -27,11 +27,7 @@ export async function POST(request: Request) {
     await fs.writeFile(filePath, JSON.stringify(updatedData, null, 2));
 
     return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('Failed to update progress:', error);
-    return NextResponse.json(
-      { error: 'Failed to update progress' },
-      { status: 500 }
-    );
+  } catch {
+    return new Response("Failed to update progress", { status: 500 });
   }
 } 
