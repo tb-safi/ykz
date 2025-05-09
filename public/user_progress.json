@@ -837,7 +837,8 @@
       "known": false,
       "score": 0,
       "day": 5,
-      "week": 1
+      "week": 1,
+      "sentence": "Finnish: Kuinka voit tänään?\nEnglish: How are you today?"
     },
     {
       "rank": 93,
@@ -18012,5 +18013,5 @@
       "week": 20
     }
   ],
-  "lastUpdated": "2025-05-09T00:08:01.127Z"
+  "lastUpdated": "2025-05-09T00:23:52.201Z"
 }
