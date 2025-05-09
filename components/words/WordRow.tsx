@@ -14,7 +14,11 @@ interface WordRowProps {
   onSentenceUpdate: (rank: number, sentence: string) => Promise<void>;
 }
 
-export function WordRow({ word, onToggleKnown, onSentenceUpdate }: WordRowProps) {
+export function WordRow({ 
+  word, 
+  onToggleKnown, 
+  onSentenceUpdate,
+}: WordRowProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -54,14 +58,21 @@ export function WordRow({ word, onToggleKnown, onSentenceUpdate }: WordRowProps)
   return (
     <div className="border-b last:border-0">
       <div
-        className="flex items-center justify-between p-4 cursor-pointer"
+        className="flex items-center justify-between p-4 cursor-pointer hover:bg-accent/50 transition-colors"
         onClick={handleExpand}
       >
-        <div className="flex-1">
-          <div className="font-medium">{word.finnish}</div>
-          <div className="text-sm text-muted-foreground">{word.english}</div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <div className="font-medium truncate">{word.finnish}</div>
+            {word.known && (
+              <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full shrink-0">
+                Known
+              </span>
+            )}
+          </div>
+          <div className="text-sm text-muted-foreground truncate">{word.english}</div>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-2 ml-4 shrink-0">
           <Button
             variant="ghost"
             size="icon"
@@ -80,8 +91,15 @@ export function WordRow({ word, onToggleKnown, onSentenceUpdate }: WordRowProps)
           )}
         </div>
       </div>
+
       {isExpanded && (
-        <div className="px-4 pb-4">
+        <div className="px-4 pb-4 space-y-4 bg-accent/30">
+          {word.pronunciation && (
+            <div className="text-sm">
+              <span className="text-muted-foreground">Pronunciation: </span>
+              {word.pronunciation}
+            </div>
+          )}
           {isGenerating ? (
             <div className="flex items-center gap-2 text-muted-foreground">
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -97,6 +115,18 @@ export function WordRow({ word, onToggleKnown, onSentenceUpdate }: WordRowProps)
             </div>
           ) : (
             <p className="text-sm text-muted-foreground">No example sentence available</p>
+          )}
+          {word.relatedWords && word.relatedWords.length > 0 && (
+            <div className="text-sm">
+              <span className="text-muted-foreground">Related words: </span>
+              {word.relatedWords.join(', ')}
+            </div>
+          )}
+          {word.notes && (
+            <div className="text-sm">
+              <span className="text-muted-foreground">Notes: </span>
+              {word.notes}
+            </div>
           )}
         </div>
       )}

@@ -8,8 +8,9 @@
       "score": 0,
       "day": 1,
       "week": 1,
-      "lastReviewed": "2025-05-08",
-      "sentence": "Finnish: Talossa on kissa.\nEnglish: There is a cat in the house."
+      "lastReviewed": "2025-05-09T00:33:09.281Z",
+      "sentence": "Finnish: Talossa on kissa.\nEnglish: There is a cat in the house.",
+      "confidence": 3
     },
     {
       "rank": 2,
@@ -45,11 +46,12 @@
       "rank": 5,
       "finnish": "hän",
       "english": "he",
-      "known": false,
+      "known": true,
       "score": 0,
       "day": 1,
       "week": 1,
-      "sentence": "Finnish: Hän on opettaja.\nEnglish: He is a teacher."
+      "sentence": "Finnish: Hän on opettaja.\nEnglish: He is a teacher.",
+      "lastReviewed": "2025-05-09T00:48:03.815Z"
     },
     {
       "rank": 6,
@@ -6319,7 +6321,8 @@
       "known": false,
       "score": 0,
       "day": 36,
-      "week": 8
+      "week": 8,
+      "sentence": "Finnish: Minä haluan tekemään ruokaa.\nEnglish: I want to make food."
     },
     {
       "rank": 702,
@@ -6328,7 +6331,8 @@
       "known": false,
       "score": 0,
       "day": 36,
-      "week": 8
+      "week": 8,
+      "sentence": "Finnish: Maan päällä on talo.\nEnglish: There is a house on the terrestrial surface."
     },
     {
       "rank": 703,
@@ -18013,5 +18017,5 @@
       "week": 20
     }
   ],
-  "lastUpdated": "2025-05-09T00:23:52.201Z"
+  "lastUpdated": "2025-05-09T00:48:03.815Z"
 }
