@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     try {
       const fileContent = await fs.readFile(filePath, 'utf-8');
       existingData = JSON.parse(fileContent);
-    } catch (error) {
+    } catch {
       // File doesn't exist or is invalid, we'll use the default data
       console.log('No existing progress file found, creating new one');
     }
