@@ -29,4 +29,9 @@ export interface WordProgress {
   weeklyGoal: number;
   currentStreak: number;
   lastStudied: string;
+}
+
+export interface Progress {
+  currentDay: number;
+  lastReviewed: string;
 } 

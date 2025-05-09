@@ -133,7 +133,6 @@ export default function WordsPage() {
                 key={word.finnish}
                 word={word}
                 onToggleKnown={handleToggleKnown}
-                onSentenceUpdate={handleSentenceUpdate}
               />
             ))}
           </div>

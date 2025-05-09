@@ -1,40 +1,32 @@
-export const generateSentenceWithClaude = async (finnish: string, english: string): Promise<string> => {
-  if (!finnish || !english) {
-    throw new Error('Both finnish and english words are required');
-  }
+import Anthropic from '@anthropic-ai/sdk';
 
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY,
+});
+
+export async function generateSentenceWithClaude(finnish: string, english: string): Promise<string> {
   try {
-    console.log('Sending request to Claude API...', { finnish, english });
-    const response = await fetch("/api/claude", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json"
-      },
-      body: JSON.stringify({
-        finnish: finnish.trim(),
-        english: english.trim()
-      })
+    const response = await anthropic.messages.create({
+      model: 'claude-3-sonnet-20240229',
+      max_tokens: 1000,
+      messages: [
+        {
+          role: 'user',
+          content: `Generate a simple example sentence in Finnish using the word "${finnish}" (which means "${english}"). The sentence should be simple enough for a beginner to understand. Include the English translation. Format the response as:
+
+Finnish: [sentence]
+English: [translation]`
+        }
+      ]
     });
 
-    console.log('Response status:', response.status);
-    const data = await response.json();
-    console.log('Response data:', data);
-
-    if (!response.ok) {
-      console.error('API Error:', data);
-      throw new Error(data.error || `API request failed: ${response.status} ${response.statusText}`);
+    const content = response.content[0];
+    if (content.type === 'text') {
+      return content.text;
     }
-
-    console.log('Received response from Claude API');
-    
-    if (!data.text) {
-      console.error('No sentence generated in response:', data);
-      throw new Error('No sentence generated in the response');
-    }
-
-    return data.text;
+    throw new Error('Unexpected response type from Claude');
   } catch (error) {
-    console.error('Failed to generate sentence:', error);
+    console.error('Error generating sentence with Claude:', error);
     throw error;
   }
-}; 
+} 

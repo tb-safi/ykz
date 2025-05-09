@@ -1,101 +1,71 @@
-import { Word } from './types';
+import { Word, Progress } from './types';
 
-interface Progress {
-  currentDay: number;
-  lastReviewed: string;
-}
-
-interface UserProgress {
-  words: Word[];
-  lastUpdated: string | null;
-}
-
-export async function getProgress(): Promise<Progress> {
-  try {
-    const response = await fetch('/user_progress.json');
-    const data: UserProgress = await response.json();
-    
-    if (!data.lastUpdated) {
-      return { currentDay: 1, lastReviewed: new Date().toISOString().split('T')[0] };
-    }
-
-    return {
-      currentDay: 1, // This will be calculated based on the last reviewed date
-      lastReviewed: data.lastUpdated
-    };
-  } catch (error) {
-    console.error('Failed to load progress:', error);
-    return { currentDay: 1, lastReviewed: new Date().toISOString().split('T')[0] };
-  }
-}
-
-export async function setProgress(progress: Progress): Promise<void> {
-  try {
-    const response = await fetch('/api/update-progress', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        lastUpdated: progress.lastReviewed
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to update progress');
-    }
-  } catch (error) {
-    console.error('Failed to save progress:', error);
-    throw error;
-  }
-}
+const STORAGE_KEYS = {
+  WORDS: 'yki_words',
+  PROGRESS: 'yki_progress'
+};
 
 export async function getWords(): Promise<Word[]> {
   try {
-    const response = await fetch('/user_progress.json');
-    const data: UserProgress = await response.json();
-    return data.words;
+    // First try to get from localStorage
+    const savedWords = localStorage.getItem(STORAGE_KEYS.WORDS);
+    if (savedWords) {
+      return JSON.parse(savedWords);
+    }
+
+    // If not in localStorage, fetch from the JSON file
+    const response = await fetch('/finnish_words_2000.json');
+    const words: Word[] = await response.json();
+    
+    // Save to localStorage for future use
+    localStorage.setItem(STORAGE_KEYS.WORDS, JSON.stringify(words));
+    return words;
   } catch (error) {
-    console.error('Failed to load words:', error);
+    console.error('Error loading words:', error);
     return [];
   }
 }
 
 export async function setWords(words: Word[]): Promise<void> {
   try {
-    const response = await fetch('/api/update-progress', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        words,
-        lastUpdated: new Date().toISOString()
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to update words');
-    }
+    localStorage.setItem(STORAGE_KEYS.WORDS, JSON.stringify(words));
   } catch (error) {
-    console.error('Failed to save words:', error);
-    throw error;
+    console.error('Error saving words:', error);
+  }
+}
+
+export async function getProgress(): Promise<Progress> {
+  try {
+    const savedProgress = localStorage.getItem(STORAGE_KEYS.PROGRESS);
+    if (savedProgress) {
+      return JSON.parse(savedProgress);
+    }
+    
+    // Default progress if none exists
+    const defaultProgress: Progress = {
+      currentDay: 1,
+      lastReviewed: new Date().toISOString()
+    };
+    
+    localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(defaultProgress));
+    return defaultProgress;
+  } catch (error) {
+    console.error('Error loading progress:', error);
+    return { currentDay: 1, lastReviewed: new Date().toISOString() };
+  }
+}
+
+export async function setProgress(progress: Progress): Promise<void> {
+  try {
+    localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(progress));
+  } catch (error) {
+    console.error('Error saving progress:', error);
   }
 }
 
 export async function getKnownWords(): Promise<Word[]> {
   const words = await getWords();
   return words.filter(word => word.known);
-}
-
-export async function toggleKnown(rank: number): Promise<void> {
-  const words = await getWords();
-  const updatedWords = words.map(word => 
-    word.rank === rank 
-      ? { ...word, known: !word.known }
-      : word
-  );
-  await setWords(updatedWords);
 }
 
 export async function getWordsForWeek(week: number): Promise<Word[]> {
