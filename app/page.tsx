@@ -38,7 +38,7 @@ export default function Home() {
             href="/learn"
             className="bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md text-center font-medium"
           >
-            Start Today's Words
+            Start Today&apos;s Words
           </Link>
           <Link 
             href="/words"
