@@ -20,10 +20,13 @@ export async function POST(request: Request) {
       ]
     });
 
-    // The response content is now in message.content[0].text
-    const sentence = message.content[0].text;
+    // Check if the content block is a text block
+    const contentBlock = message.content[0];
+    if (contentBlock.type !== 'text') {
+      throw new Error('Unexpected response type from Claude');
+    }
     
-    return NextResponse.json({ sentence: sentence.trim() });
+    return NextResponse.json({ sentence: contentBlock.text.trim() });
   } catch (error) {
     console.error("Error generating sentence:", error);
     return NextResponse.json(
