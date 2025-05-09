@@ -77,7 +77,8 @@
       "known": false,
       "score": 0,
       "day": 1,
-      "week": 1
+      "week": 1,
+      "sentence": "Finnish: Tiedän, että hän on opettaja.\nEnglish: I know that he is a teacher."
     },
     {
       "rank": 9,
@@ -240,7 +241,8 @@
       "known": false,
       "score": 0,
       "day": 2,
-      "week": 1
+      "week": 1,
+      "sentence": "Finnish: He ovat kotona.\nEnglish: They are at home."
     },
     {
       "rank": 27,
@@ -18010,5 +18012,5 @@
       "week": 20
     }
   ],
-  "lastUpdated": "2025-05-08T23:31:23.403Z"
+  "lastUpdated": "2025-05-09T00:08:01.127Z"
 }

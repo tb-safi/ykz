@@ -1,49 +1,51 @@
 'use client';
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Word } from '@/lib/types';
+import { motion } from "framer-motion";
+import { Word } from "@/lib/types";
+import { Loader2 } from "lucide-react";
 
 interface FlashcardProps {
   word: Word;
+  isFlipped: boolean;
+  onFlip: () => void;
+  isGenerating?: boolean;
 }
 
-export function Flashcard({ word }: FlashcardProps) {
-  const [isFlipped, setIsFlipped] = useState(false);
-
+export function Flashcard({ word, isFlipped, onFlip, isGenerating }: FlashcardProps) {
   return (
-    <div
-      className="perspective-1000 cursor-pointer"
-      onClick={() => setIsFlipped(!isFlipped)}
+    <motion.div
+      className="w-full h-full relative cursor-pointer touch-none"
+      animate={{ rotateY: isFlipped ? 180 : 0 }}
+      transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
+      style={{ transformStyle: "preserve-3d" }}
+      onClick={onFlip}
     >
-      <motion.div
-        className="relative w-full h-48 preserve-3d"
-        animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={{ duration: 0.6 }}
+      <div
+        className={`absolute w-full h-full backface-hidden rounded-xl p-6 flex flex-col justify-center items-center bg-card text-card-foreground shadow-lg ${
+          isFlipped ? "hidden" : "block"
+        }`}
       >
-        {/* Front of card */}
-        <div
-          className={`absolute w-full h-full backface-hidden p-6 rounded-lg bg-card text-card-foreground border shadow-sm ${
-            isFlipped ? "rotate-y-180" : ""
-          }`}
-        >
-          <h3 className="text-2xl font-bold text-center">{word.finnish}</h3>
-        </div>
+        <h2 className="text-3xl font-bold text-center">{word.finnish}</h2>
+      </div>
 
-        {/* Back of card */}
-        <div
-          className={`absolute w-full h-full backface-hidden p-6 rounded-lg bg-card text-card-foreground border shadow-sm rotate-y-180 ${
-            isFlipped ? "" : "rotate-y-180"
-          }`}
-        >
-          <h3 className="text-2xl font-bold text-center mb-2">{word.english}</h3>
-          {word.sentence && (
-            <p className="text-sm text-muted-foreground text-center">
-              {word.sentence}
-            </p>
-          )}
-        </div>
-      </motion.div>
-    </div>
+      <div
+        className={`absolute w-full h-full backface-hidden rounded-xl p-6 flex flex-col justify-center items-center bg-card text-card-foreground shadow-lg ${
+          isFlipped ? "block" : "hidden"
+        }`}
+        style={{ transform: "rotateY(180deg)" }}
+      >
+        <h2 className="text-3xl font-bold text-center mb-4">{word.english}</h2>
+        {isGenerating ? (
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span>Generating example sentence...</span>
+          </div>
+        ) : word.sentence ? (
+          <p className="text-muted-foreground text-center text-lg italic">
+            {word.sentence}
+          </p>
+        ) : null}
+      </div>
+    </motion.div>
   );
 } 

@@ -3,14 +3,22 @@
 import { useEffect, useState } from 'react';
 import { getProgress, getKnownWords } from '@/lib/storage';
 import Link from 'next/link';
+import { Word } from '@/lib/types';
 
 export default function Home() {
-  const [progress, setProgress] = useState(getProgress());
-  const [knownWords, setKnownWords] = useState<number[]>([]);
+  const [progress, setProgress] = useState({ currentDay: 1, lastReviewed: '' });
+  const [knownWords, setKnownWords] = useState<Word[]>([]);
 
   useEffect(() => {
-    setProgress(getProgress());
-    setKnownWords(getKnownWords());
+    const loadData = async () => {
+      const [progressData, words] = await Promise.all([
+        getProgress(),
+        getKnownWords()
+      ]);
+      setProgress(progressData);
+      setKnownWords(words);
+    };
+    loadData();
   }, []);
 
   return (
@@ -21,7 +29,6 @@ export default function Home() {
         <div className="bg-card rounded-lg shadow-sm p-6">
           <div className="space-y-2">
             <p className="text-lg font-medium">Day {progress.currentDay} / 134</p>
-            <p className="text-lg font-medium">XP: {progress.xp}</p>
             <p className="text-lg font-medium">Words Learned: {knownWords.length} / 2000</p>
           </div>
         </div>
