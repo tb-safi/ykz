@@ -34,12 +34,12 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col gap-4">
-          <Link 
+          {/* <Link 
             href="/learn"
             className="bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md text-center font-medium"
           >
             Start Today&apos;s Words
-          </Link>
+          </Link> */}
           <Link 
             href="/words"
             className="border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 rounded-md text-center font-medium"
